@@ -2,12 +2,8 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-
 #define GL_GLEXT_PROTOTYPES 1
 #include <SDL_opengles2.h>
-
 #else
 #include <SDL.h>
 #define GL_GLEXT_PROTOTYPES 1
