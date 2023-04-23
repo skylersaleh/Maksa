@@ -75,7 +75,7 @@ char * mk_get_asset_path(const char * path){
     fclose(f);
     return buffer; 
   }
-  snprintf(buffer,size,"%s/%s",base,path);
+  snprintf(buffer,size,"%s%s",base,path);
   return buffer;
 }
 char * mk_file_to_string(const char * filename){
