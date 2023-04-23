@@ -171,7 +171,11 @@ void mk_make_shader_program(int shad_id, const char* shader){
   char * inc_processed = mk_process_includes(shader);
 
   printf("Compiling Shader:\n%s\n",inc_processed);
-  const char * header = "#version 120\n";
+  const char * header = "#version 330\n";
+  #ifdef __EMSCRIPTEN__
+  header = "#version 300 es\n"
+  "precision highp float;\n";
+  #endif
   const char* vert_source[] = {header,"#define VERTEX_SHADER 1\n",inc_processed};
   const char* frag_source[] = {header,"#define PIXEL_SHADER 1\n",inc_processed};
 
@@ -201,13 +205,6 @@ void mk_make_shader_program(int shad_id, const char* shader){
 
   free(inc_processed);
 
-  // Specify the layout of the vertex data
-  GLint vert_id_attrib = glGetAttribLocation(shaderProgram, "mk_vertex_id");
-  GL_CK_ERROR();
-  glEnableVertexAttribArray(vert_id_attrib);
-  GL_CK_ERROR();
-  glVertexAttribPointer(vert_id_attrib, 1, GL_INT, GL_FALSE, 0, 0);
-  GL_CK_ERROR();
   state.shaders[shad_id].program = shaderProgram;
   state.shaders[shad_id].vec4_array_uniform = glGetUniformLocation(shaderProgram,"mk_uniform_array");
 }
@@ -321,9 +318,16 @@ int main(int argc, char** argv){
   SDL_Init(SDL_INIT_EVERYTHING);
   printf("Initializing Maksa Engine:\nCommit: %s\nBranch: %s\n",GIT_COMMIT_HASH,GIT_BRANCH);
   state.wnd = SDL_CreateWindow("Maksa", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE);
+  #ifdef __EMSCRIPTEN__
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-  SDL_GL_SetSwapInterval(1);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  #else
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  #endif
+  SDL_GL_SetSwapInterval(0);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   state.glc = SDL_GL_CreateContext(state.wnd);
@@ -336,17 +340,15 @@ int main(int argc, char** argv){
 
   GL_CK_ERROR();
 
-  // Create a Vertex Buffer Object and copy the vertex data to it
-  GLuint vbo;
-  glGenBuffers(1, &vbo);
-
-  #define MAX_VERTS (16*1024*1024)
-  GLuint *vert_id_buff = (GLuint*)malloc(sizeof(GLuint)*MAX_VERTS);
-  for(int i=0;i<MAX_VERTS;++i)vert_id_buff[i]=i;
-
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLuint)*MAX_VERTS, vert_id_buff, GL_STATIC_DRAW);
-  free(vert_id_buff);
+  // Create a Vertex Buffer Object and copy the vertex data to it  
+  GLuint vao;
+  #ifdef __EMSCRIPTEN__
+    glGenVertexArraysOES(1,&vao);
+    glBindVertexArrayOES(vao);
+  #else
+    glGenVertexArrays(1,&vao);
+    glBindVertexArray(vao);
+  #endif
   GL_CK_ERROR();
 
   if(argc>1)mk_set_root_shader(argv[1]);
@@ -358,7 +360,7 @@ int main(int argc, char** argv){
   mk_open_audio("assets/wait.mp3");
 
 #ifdef __EMSCRIPTEN__
-  emscripten_set_main_loop(mk_sdl_main_loop, 0, true);
+  emscripten_set_main_loop(mk_sdl_main_loop, 0, 0);
 #else
   while(true) mk_sdl_main_loop();
 #endif
