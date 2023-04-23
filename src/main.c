@@ -19,6 +19,8 @@
 
 #include <stdbool.h>
 #include <math.h>
+#include <string.h>
+#include <stdio.h>
 
 #define MK_FILE_PATH_SIZE 2048
 
