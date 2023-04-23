@@ -327,7 +327,9 @@ int main(int argc, char** argv){
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   state.glc = SDL_GL_CreateContext(state.wnd);
+#ifndef __EMSCRIPTEN__
   int version = gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress);
+#endif
   state.rdr = SDL_CreateRenderer(state.wnd, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
   SDL_GL_MakeCurrent(state.wnd,state.glc);
