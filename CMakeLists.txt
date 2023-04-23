@@ -186,6 +186,7 @@ add_definitions(-DGIT_BRANCH=\"${GIT_BRANCH}\")
 add_definitions(-DGIT_TAG=\"${GIT_TAG}\")
 
 set(MAKSA_SRC src/main.c src/stb.c src/miniz.c)
+include_directories(src/glad/include)
 
 if(USE_SDL)
     include_directories(${SDL2_INCLUDE_DIRS})

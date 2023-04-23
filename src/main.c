@@ -1,10 +1,12 @@
 
+
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <SDL.h>
 #define GL_GLEXT_PROTOTYPES 1
 #include <SDL_opengles2.h>
 #else
+#include "glad/src/gl.c"
 #include <SDL.h>
 #define GL_GLEXT_PROTOTYPES 1
 #include <SDL_opengl.h>
@@ -325,7 +327,7 @@ int main(int argc, char** argv){
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   state.glc = SDL_GL_CreateContext(state.wnd);
-
+  int version = gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress);
   state.rdr = SDL_CreateRenderer(state.wnd, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
   SDL_GL_MakeCurrent(state.wnd,state.glc);
