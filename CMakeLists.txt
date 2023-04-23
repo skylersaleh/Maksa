@@ -199,7 +199,7 @@ endif()
 
 if(WIN32)
     set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/icons/appicon.rc")
-    add_executable(${PROJECT_NAME} WIN32 ${MAKSA_SRC} ${APP_ICON_RESOURCE_WINDOWS})
+    add_executable(${PROJECT_NAME} ${MAKSA_SRC} ${APP_ICON_RESOURCE_WINDOWS})
 elseif(MACOS OR IOS)
     if(MACOS)
       add_definitions(-DPLATFORM_MAC=1)
