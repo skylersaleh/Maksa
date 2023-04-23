@@ -305,7 +305,7 @@ void mk_open_audio(const char* path){
     printf("Failed to open audio_file: %s\n",path);
   }
   free(asset_path);
-  SDL_AudioSpec audio_sets = {};
+  SDL_AudioSpec audio_sets = {0};
   audio_sets.freq = state.dec.info.hz; // Our sampling rate
   audio_sets.format = AUDIO_S16; // Use 16-bit amplitude values
   audio_sets.channels = state.dec.info.channels; // Stereo samples
