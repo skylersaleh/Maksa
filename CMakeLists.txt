@@ -109,7 +109,7 @@ if(USE_SDL)
     set(SDL_LIBC ON CACHE BOOL "USE LIBC" FORCE)    
     set(SDL_STATIC_PIC ON CACHE BOOL "Build Static PIC" FORCE)
     # Allow some projects to be built conditionally.
-    set(SDL2_DISABLE_SDL2MAIN  ON CACHE BOOL "Disable building/installation of SDL2main" FORCE)
+    set(SDL2_DISABLE_SDL2MAIN  FALSE CACHE BOOL "Disable building/installation of SDL2main" FORCE)
     set(SDL2_DISABLE_INSTALL    ON CACHE BOOL "Disable installation of SDL2" FORCE)
     set(SDL2_DISABLE_UNINSTALL  ON CACHE BOOL "Disable uninstallation of SDL2" FORCE)    
 
@@ -199,7 +199,7 @@ endif()
 
 if(WIN32)
     set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/icons/appicon.rc")
-    add_executable(${PROJECT_NAME} ${MAKSA_SRC} ${APP_ICON_RESOURCE_WINDOWS})
+    add_executable(${PROJECT_NAME} WIN32 ${MAKSA_SRC} ${APP_ICON_RESOURCE_WINDOWS})
 elseif(MACOS OR IOS)
     if(MACOS)
       add_definitions(-DPLATFORM_MAC=1)
