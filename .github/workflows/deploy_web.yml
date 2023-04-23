@@ -17,7 +17,7 @@ jobs:
           cd build
           emcmake cmake .. -DPLATFORM=Web && cmake --build .
           mkdir website
-          mv bin/SkyEmu.html bin/index.html
+          mv bin/Maksa.html bin/index.html
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -26,15 +26,6 @@ jobs:
           target-folder: commit/${{ github.sha }}
           force: false
           clean: false
-      - name: Post PR Comment
-        if: github.event_name == 'pull_request'
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            Web build for ${{ github.sha }} will be live at https://web.skyemu.app/commit/${{ github.sha }}/index.html
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
-          allow-repeats: true # This is the default
       - name: Deploy to main site 🚀
         if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
