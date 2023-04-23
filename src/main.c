@@ -1,5 +1,5 @@
 
-
+#define SDL_MAIN_HANDLED
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <SDL.h>
