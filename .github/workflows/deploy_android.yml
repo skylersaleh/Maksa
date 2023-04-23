@@ -1,0 +1,28 @@
+name: Build Android
+on: [push,pull_request]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1 
+      - name: Setup Ninja 
+        uses: seanmiddleditch/gha-setup-ninja@master
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+      # - uses: sparkfabrik/android-build-action@v1.0.0 #Temporary work around for bug in sparkfabrik repo
+      - uses: geonativefr/android-build-action@fix-bundler-version
+        with:
+          project-path: tools/android_project
+          output-path: SkyEmu.apk
+          gradle-task: assemble
+      - name: GH Release 🚀
+        # You may pin to the exact commit or the version.
+        uses: actions/upload-artifact@v2
+        with:
+           name: AndroidRelease
+           path: SkyEmu.apk
+        
+ 
